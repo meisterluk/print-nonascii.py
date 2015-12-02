@@ -29,12 +29,28 @@ class Character:
 
         return out
 
+    @staticmethod
+    def make_pointer(line, colno):
+        out = ''
+        for idx in range(len(line)):
+            if idx == colno:
+                break
+            elif line[idx] == '\t':
+                out += '\t'
+            else:
+                out += '─'
+        return out + '⬏'
+
     def __str__(self):
         out = ''
 
         if self.line is not None and self.colno is not None:
-            out += '{: <3d}: {}'.format(self.lineno, self.line)
-            out += '   : {}⬏\n\n'.format('─' * self.colno)
+            leading_ws = max(len(str(self.lineno)), 3)
+            tmpl = '{: <' + str(leading_ws) + 'd}: {}'
+            out += tmpl.format(self.lineno, self.line)
+            out += ' ' * leading_ws + ': '
+            out += self.make_pointer(self.line, self.colno)
+            out += '\n\n'
 
         out += "{} ".format(self.character)
 
